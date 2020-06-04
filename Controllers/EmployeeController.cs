@@ -5,20 +5,22 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace NetFrameworkWebAPI.Controllers
 {
+    [EnableCorsAttribute("https://localhost:44361", "*","*")]
     public class EmployeeController : ApiController
     {
         //Employee & Employees are auto-generated using EF
-        [HttpGet]
-        public IEnumerable<Employee> FetchEmployees()
-        {
-            using (DevDBEntities entities = new DevDBEntities())
-            {
-                return entities.Employees.ToList();
-            }
-        }
+        //[HttpGet]
+        //public IEnumerable<Employee> FetchEmployees()
+        //{
+        //    using (DevDBEntities entities = new DevDBEntities())
+        //    {
+        //        return entities.Employees.ToList();
+        //    }
+        //}
 
         [HttpGet]
         public HttpResponseMessage FetchEmployeeById(int id)
@@ -35,6 +37,32 @@ namespace NetFrameworkWebAPI.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Employee " + id.ToString() +  " does not exist");    
                 }
+            }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage FetchEmployeeByGender(string gender = "All")
+        {
+            try
+            {
+                using (DevDBEntities entities = new DevDBEntities())
+                {
+                    switch (gender.ToLower())
+                    {
+                        case "all":
+                            return Request.CreateResponse(HttpStatusCode.OK, entities.Employees.ToList());
+                        case "male":
+                            return Request.CreateResponse(HttpStatusCode.OK, entities.Employees.Where(e => e.Gender.ToLower() == "male").ToList());
+                        case "female":
+                            return Request.CreateResponse(HttpStatusCode.OK, entities.Employees.Where(e => e.Gender.ToLower() == "female").ToList());
+                        default:
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid Gender entered : " + gender.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
 
@@ -88,7 +116,7 @@ namespace NetFrameworkWebAPI.Controllers
         }
 
         [HttpDelete]
-        public HttpResponseMessage DeleteEmployee(int id)
+        public HttpResponseMessage DeleteEmployee([FromBody] int id)
         {
             try
             {

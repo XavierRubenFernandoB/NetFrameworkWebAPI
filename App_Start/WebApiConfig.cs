@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Cors;
+using WebApiContrib.Formatting.Jsonp;
 
 namespace NetFrameworkWebAPI
 {
@@ -41,6 +43,17 @@ namespace NetFrameworkWebAPI
 
             ////Calling Custom Json Formatter : Problem in above approach is overcome
             //config.Formatters.Add(new CustomJsonFormatter());
+
+            //CROSS DOMAIN/ORIGIN RESOURCE SHARING BY jsonp / cors 
+            //Support for JSONp
+            //var jsonpformatter = new JsonpMediaTypeFormatter(config.Formatters.JsonFormatter);
+            //config.Formatters.Insert(0, jsonpformatter);
+
+            //Enable CORS
+            //EnableCorsAttribute cors = new EnableCorsAttribute("*", "*", "*");//set for the complete webapi
+            //config.EnableCors(cors);
+            //OR
+            config.EnableCors();//This will only enable CORS, but defined at controller/method level
         }
 
         public class CustomJsonFormatter : JsonMediaTypeFormatter
