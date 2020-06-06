@@ -10,10 +10,22 @@
             var vulEmployees = $('#ulEmployees');
 
             $(btnGet).click(function () {
+
+                //BASIC AUTHENTICATION
+                var v_username = $('#txtUser');
+                var v_password = $('#txtPassword');
+
+                //alert(btoa(v_username + ':' + v_password));
+
                 $.ajax({
                     type     : 'GET',
                     url      : 'api/employee',
-                    dataType : 'json',
+                    dataType: 'json',
+                    headers: {
+                                //'Authorization' : 'Basic ' + btoa(v_username + ':' + v_password)       //notworking
+                                //'Authorization': 'Basic bWFsZTptYWxl'                                  //MALE
+                                'Authorization': 'Basic ZmVtYWxlOmZlbWFsZQ=='                            //FEMALE
+                             },
                     success: function (data) {
                         vulEmployees.empty();
                         $.each(data, function (index, val) {
@@ -32,6 +44,16 @@
     </script>
 </head>
 <body>
+    <table>
+        <tr>
+            <td>User</td>
+            <td><input type="text" id="txtUser"/></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" id="txtPassword" /></td>
+        </tr>
+    </table>
     <input type="button" id="btnGet" value="Get Employees" />
     <input type="button" id="btnClear" value="Clear"/>
     <ul id="ulEmployees"></ul>

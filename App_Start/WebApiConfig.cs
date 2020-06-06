@@ -54,6 +54,12 @@ namespace NetFrameworkWebAPI
             //config.EnableCors(cors);
             //OR
             config.EnableCors();//This will only enable CORS, but defined at controller/method level
+
+            //To REDIRECT HTTP requests to HTTPS
+            //config.Filters.Add(new RequireHttpsAttribute());
+            
+            //To ADD Basic Authentication
+            config.Filters.Add(new BasicAuthenticationAttribute());
         }
 
         public class CustomJsonFormatter : JsonMediaTypeFormatter

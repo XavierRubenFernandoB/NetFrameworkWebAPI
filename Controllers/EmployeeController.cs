@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
 namespace NetFrameworkWebAPI.Controllers
 {
     [EnableCorsAttribute("https://localhost:44361", "*","*")]
+    //[RequireHttps]
     public class EmployeeController : ApiController
     {
         //Employee & Employees are auto-generated using EF
@@ -45,6 +47,9 @@ namespace NetFrameworkWebAPI.Controllers
         {
             try
             {
+                //TO TEST BASIC AUTHENTICATION
+                gender = Thread.CurrentPrincipal.Identity.Name;
+
                 using (DevDBEntities entities = new DevDBEntities())
                 {
                     switch (gender.ToLower())
